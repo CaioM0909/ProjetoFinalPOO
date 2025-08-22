@@ -10,6 +10,7 @@ import java.util.*;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import javax.swing.Timer;
 
 import java.net.URL;  //esse é para o gif
 
@@ -82,18 +83,26 @@ public class Teste extends JFrame implements ActionListener {
         botao.setEnabled(false);
         player1= new Jogador();
         JLabel joga1 = player1.getNave();
+
         janelas.add(joga1, JLayeredPane.PALETTE_LAYER);
+
+        //possibilitando a movimentação
+        this.addKeyListener(player1);
+        this.setFocusable(true); // vai permitir o foco na janela
+        this.requestFocusInWindow(); //foca na janela
     }
     //Isso é para redimensionar as coisas na tela
-    private void redimensiona(){
-        Image imagemCarregada = imagem.getScaledInstance(getWidth(),getHeight(),Image.SCALE_SMOOTH);
-        ImageIcon iconeDeImg = new ImageIcon(imagemCarregada);
-        label.setIcon(iconeDeImg);
-        label.setBounds(0, 0, getWidth(), getHeight());
-        int largura = getWidth()/2;
-        int comprimento = getHeight()/2;
-        player1.setPosicao(largura,comprimento+100);
-        botao.setBounds(largura-(largura/5),comprimento-(comprimento/5),300,120);
+    public void redimensiona(){
+        if(imagem!=null && player1!=null && botao!=null){
+            Image imagemCarregada = imagem.getScaledInstance(getWidth(),getHeight(),Image.SCALE_SMOOTH);
+            ImageIcon iconeDeImg = new ImageIcon(imagemCarregada);
+            label.setIcon(iconeDeImg);
+            label.setBounds(0, 0, getWidth(), getHeight());
+            int largura = getWidth()/2;
+            int comprimento = getHeight()/2;
+            player1.setPosicao(largura,comprimento+100);
+            botao.setBounds(largura-(largura/5),comprimento-(comprimento/5),300,120);
+        }
     }
     //Aqui é o main para executar tudo
     public static void main(String [] args){
@@ -103,21 +112,82 @@ public class Teste extends JFrame implements ActionListener {
 
 }
 
-class Jogador{
+class Jogador implements KeyListener{
     private URL url;
     private JLabel nave;
+    private int posicaoX;
+    private int posicaoY;
+    private Timer mover;
+    private int direita=0, esquerda=0;
+    private int xMax, yMax;
         Jogador(){
             url = Jogador.class.getResource("/ProjetoFinal/Imagens/gifNave.gif");
             ImageIcon icon = new ImageIcon(url);
             nave = new JLabel(icon);
-            nave.setBounds(600, 400, 250, 250);
+            posicaoX=600;
+            posicaoY=500;
+            nave.setBounds(posicaoX, posicaoY, 250, 250);
+            mover = new Timer(10, e-> mexer() );
+            mover.start();
         }
         public JLabel getNave(){
             return nave;
         }
 
         public void setPosicao(int w,int h){
+            posicaoX=w;
+            posicaoY=h;
             nave.setBounds(w, h, 250, 250);
+        }
+
+        public void setMax(int w, int h){
+            xMax= w;
+            yMax= h;
+        }
+
+        @Override 
+        public void keyPressed(KeyEvent aperta){
+            int tecla = aperta.getKeyCode();
+            switch(tecla){
+                case KeyEvent.VK_D:
+                direita=1;
+                break;
+                case KeyEvent.VK_A:
+                esquerda=1;
+                break;
+            }
+        }
+        @Override public void keyReleased(KeyEvent solta) {
+            int soltou= solta.getKeyCode();
+            switch(soltou){
+                case KeyEvent.VK_D:
+                direita=0;
+                break;
+                case KeyEvent.VK_A:
+                esquerda=0;
+                break;
+            }
+        }
+        @Override public void keyTyped(KeyEvent e) {}
+
+        public void mexer(){
+            if(posicaoX>=-55 && posicaoX<=2000){
+                if(direita==1){
+                    posicaoX+=5;
+                    if(posicaoX>2000){
+                        posicaoX=2000;
+                    }
+                }
+                if(esquerda==1){
+                    posicaoX-=5;
+                    if(posicaoX<-55){
+                        posicaoX=-55;
+                    }
+                }
+
+                setPosicao(posicaoX, posicaoY);
+            }
+            
         }
 
 }
