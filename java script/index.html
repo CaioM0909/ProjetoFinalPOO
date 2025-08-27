@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Space Invaders JS</title>
+  <style>
+        body { 
+            margin: 0; 
+            background: black; 
+            overflow: hidden; 
+        }
+
+        canvas {
+            z-index: 1; 
+            background-image: url("Imagens/backgroundEstrelas.png");
+            background-size: 100%;
+            background-repeat: no-repeat;  
+            background-position-y: 0%;
+            background-position-x:center;
+            overflow-y: hidden;
+            overflow-x: hidden;
+
+
+        }
+
+        #botaoJogar {
+            position: absolute;
+            top: 70%;
+            left: 40%;
+            font-size: 2vw;
+            padding: 14px 32px 15px;
+            background: rgba(45,182,250,0.5);
+            background-size: 100%;
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            height: 4vw;
+            width: 17vw;
+        }
+        #titulo {
+            position: absolute;
+            z-index: 4;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 3px;
+            text-align: center;
+            background-color:  transparent;
+            border: 5px solid transparent;
+            height: 45%;
+            width: 70%;
+            left: 22%;
+            top: 5%;
+            border-radius: 10px;
+        
+        }
+        .alien1{
+            position: absolute;
+            width:5vw;
+            left:50%;
+            top:90%;
+            visibility: hidden;
+        }
+  </style>
+</head>
+<body>
+    <button id="botaoJogar">Jogar</button>
+  
+    <canvas id="Canvas"></canvas>
+
+    <img src="Imagens/Cosmic Invasion.png" id="titulo" alt="">
+    <img src="Imagens/alien1.gif" id="alien1" alt="" onplay="">
+    <img src="Imagens/alien2.gif" id="alien2" alt="">
+    <img src="Imagens/alien3.gif" id="alien3" alt="">
+    <img src="Imagens/gifNave.gif" id="nave" alt="">
+    <img src="Imagens/tiroNave.gif" id="tiro" alt="">
+    <img src="Imagens/explosaoGif.gif" id="explosao" alt="" onplay="">
+    <script src="teste.js"></script>
+</body>
+</html> 
