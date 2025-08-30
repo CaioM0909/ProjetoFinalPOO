@@ -25,7 +25,9 @@ class Jogo {
     this.canvas.height = this.altura;
 
     const jogador = this.objetos.find(e => e instanceof Jogador);
-    if (jogador) jogador.posY = this.altura - jogador.altura - 20;
+    if (jogador) {
+      jogador.posY = this.altura - jogador.altura - 20;
+    }
   }
 
   adicionarTiro(tiro) {
@@ -36,37 +38,44 @@ class Jogo {
     const jogador = new Jogador(this.largura / 2, this.altura - 120, this);
     this.objetos.push(jogador);
     
+    nave.style.visibility = "visible";
+
+    
+
     /*const spriteSheet = new Image();
     spriteSheet.src = "alienS1.png";*/
 
     /*spriteSheet.onload = () => {
     // cria os aliens e inicia o loop
-    this.criarAliens(spriteSheet);
+    this.criarAliens(spriteSheet);*/
     requestAnimationFrame(this.loop);
-    }*/
+    
   }
 
   criarAliens() {
     
     let x = 100;
     for (let i = 0; i < 5; i++) {
-      this.objetos.push(new Alien(x, 50, 300, 300));
+      this.objetos.push(new Alien(x, 50, 500, 500));
       x += 80;
     }
   }
 
   loop() {
-    this.ctx.clearRect(0, 0, this.largura, this.altura);
+  this.ctx.clearRect(0, 0, this.largura, this.altura);
 
-    // Atualiza todos os objetos
-    this.objetos.forEach(objeto => objeto.update(this.teclas));
+  // Atualiza
+  this.objetos.forEach(objeto => objeto.update(this.teclas));
 
-    // Desenha todos os objetos
-    //this.objetos.forEach(objeto => objeto.draw(this.ctx));
+  // Remove tiros que saíram da tela
+  this.objetos = this.objetos.filter(objeto => {
+    if (objeto instanceof Tiro && objeto.posY + objeto.altura < 0) {
+      objeto.remover(); // remove o <img> da tela
+      return false; // tira do array
+    }
+    return true;
+  });
 
-    // Remove tiros que saíram da tela
-    this.objetos = this.objetos.filter(objeto => !(objeto instanceof Tiro && objeto.posY < -50));
-
-    requestAnimationFrame(this.loop);
+  requestAnimationFrame(this.loop);
   }
 }

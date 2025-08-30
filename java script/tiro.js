@@ -1,17 +1,25 @@
 class Tiro extends Objeto {
   constructor(x, y) {
-    super(x, y, 20, 40);
-    this.vel = 6;
-    //this.sprite = new Image();
-    //this.sprite.src = "Imagens/tiroNave.gif";
-    this.tiroNave = document.getElementById("tiroNave");
+    super(x, y, 90, 180);
+    this.vel = 5 ;
+
+    // cria um <img> para este tiro
+    this.element = document.createElement("img");
+    this.element.src = "Imagens/tiroNave.gif";
+    this.element.style.position = "absolute";
+    this.element.style.width = this.largura + "px";
+    this.element.style.height = this.altura + "px";
+    this.element.style.left = x + "px";
+    this.element.style.top = y + "px";
+    document.body.appendChild(this.element); // adiciona na tela
   }
 
   update() {
     this.posY -= this.vel;
+    this.element.style.top = this.posY + "px";
   }
 
-  /*draw(ctx) {
-    ctx.drawImage(this.sprite, this.posX - this.largura / 2, this.posY, this.largura, this.altura);
-  }*/
+  remover() {
+    this.element.remove(); // remove da tela
+  }
 }

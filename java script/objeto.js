@@ -10,9 +10,9 @@ class Objeto {
     // cada subclasse implementa sua própria lógica
   }
 
-  draw(ctx) {
+  /*draw(ctx) {
     // cada subclasse implementa sua própria renderização
-  }
+  }*/
 
   colideCom(outro) {
     return (

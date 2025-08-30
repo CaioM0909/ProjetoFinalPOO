@@ -40,6 +40,7 @@
             gap: 10px;
             height: 4vw;
             width: 17vw;
+            z-index: 4;
         }
         #titulo {
             position: absolute;
@@ -58,22 +59,22 @@
             border-radius: 10px;
         
         }
-        .explosao{
+        
+        #nave{
             position: absolute;
-            width:5vw;
+            z-index: 2;
+            width:10vw;
             left:50%;
-            top:90%;
+            top:80%;
             visibility: hidden;
         }
-        .nave{
-            width:5vw;
+        #tiroNave{
+            position: absolute;
+            z-index: 2;
+            width: 10vw;
             left:50%;
-            top:90%;
-        }
-        .tiroNave{
-            width: 5vw;
-            left:50%;
-            top:90%;
+            top:80%;
+            visibility: hidden;
         }
         .alien{
             width: 5vw;
@@ -88,11 +89,14 @@
     <canvas id="Canvas"></canvas>
 
     <img src="Imagens/Cosmic Invasion.png" id="titulo" alt="">
-    <img src="Imagens/explosaoGif.gif" id="explosao" alt="" onplay="">
-    <img src="Imagens/gifNave.gif" id="nave" alt="" onplay="">
+    <img src="Imagens/gifNave.gif" id="nave" alt="" autoonplay="">
     <img src="Imagens/tiroNave.gif" id="tiroNave" alt="" onplay="">
     <img src="Imagens/alien1.gif" id="alien" alt="" onplay="">
     
+    <script src="objeto.js"></script>
+    <script src="alien.js"></script>
+    <script src="jogador.js"></script>
+    <script src="tiro.js"></script>
     <script src="jogo.js"></script>
 
     <script>
