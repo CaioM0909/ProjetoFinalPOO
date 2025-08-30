@@ -7,9 +7,19 @@ class Jogo {
     this.altura = window.innerHeight;
     this.canvas.width = this.largura;
     this.canvas.height = this.altura;
+    
 
     this.objetos = []; // todos os objetos: jogador, aliens, tiros
     this.teclas = {};
+
+    this.direcaoAliens = 1;
+    this.velAliens = 50;
+    this.contadorAliens = 0; 
+    this.contadorDescida=0;
+    this.delayDescida=100;
+    this.delayAliens = 200;
+    this.descendo=false;
+    this.desceu=0
 
     window.addEventListener("resize", () => this.redimensionaCanvas());
     window.addEventListener("keydown", e => this.teclas[e.code] = true);
@@ -53,47 +63,83 @@ class Jogo {
   }
 
   criarAliens() {
-    
-    let x = 100;
-    for (let i = 0; i < 12; i++) {
-      this.objetos.push(new Alien(x, 50, 500, 500));
-      x += 80;
+      
+        let x = 100;
+        let y=100;
+        for(let j=0;j<5;j++){
+            for(let i = 0; i < 12; i++) {
+                if(j<2){
+                    this.objetos.push(new Alien(x, y, 500, 500,"/ProjetoFinal/Imagens/alien1.gif"));
+                }
+                if(j>=2 && j<=3){
+                    this.objetos.push(new Alien(x, y, 500, 500,"/ProjetoFinal/Imagens/alien2.gif"));
+                }
+                if(j==4){
+                    this.objetos.push(new Alien(x, y, 500, 500,"/ProjetoFinal/Imagens/alien3.gif"));
+                }
+                x += 80;
+            }
+            y-=50;
+            x=100;
+        }
     }
-  }
 
   loop() {
   this.ctx.clearRect(0, 0, this.largura, this.altura);
 
+  this.descendo=false;
   this.alienMudouDirecao = false;
   this.contadorAliens++;
-  // Atualiza todos os objetos
-    this.objetos.forEach(objeto => {
-      if (objeto instanceof Alien) {
-        if(objeto.posX + objeto.largura >= jogo.largura+250 || objeto.posX <= -250) {
-          // muda direção global
-          jogo.direcaoAliens *= -1;
-          // desce todos os aliens
-          jogo.objetos.forEach(obj => {
-            if(obj instanceof Alien) {
-              obj.posY += 50; // distância para descer
-            }
-          }
-          );
-         }
-          if (this.contadorAliens >= this.delayAliens) {
-            objeto.update(this.teclas, this);
-          }
-      }
+  if (this.contadorAliens >= this.delayAliens) {
+    // Filtra apenas os aliens
+        const aliens = this.objetos.filter(o => o instanceof Alien);
 
-      else {
-          //Jogador, tiros etc...
-          objeto.update(this.teclas, this);
-          
+        // Calcula posição mínima e máxima dos aliens
+        const maxX = Math.max(...aliens.map(a => a.posX + a.largura-160));
+          const minX = Math.min(...aliens.map(a => a.posX+160));
+
+        // Se algum alien atingir a borda, muda direção e desce todos
+        if (maxX >= this.largura || minX <= 0) {
+            this.direcaoAliens *= -1;
+            this.descendo=true;
+            //Faz os aliens descerem
+            aliens.forEach(a => {
+            a.posY += 50; 
+            });
         }
-    });
+  // Move todos os aliens
+        aliens.forEach(a => {
+            if(this.desceu==0){
+                a.posX += this.velAliens * this.direcaoAliens;
+            }
+            
+            // Atualiza posição do elemento <img>
+            if (a.alien) {
+                if(this.descendo==false){
+                    a.alien.style.left = a.posX + "px";
+                }
+                a.alien.style.top = a.posY + "px";
+            }
+          });
+            //Para fazer com que a posição x deles não aumente em dobro quando estou evitando de mover pros lados ao descer
+            if(this.desceu==1){
+                this.desceu=0;
+            }
+            if(this.descendo==true){
+                this.desceu=1;
+            }
+            //Reseta o contador
+            if (this.contadorAliens >= this.delayAliens) 
+              this.contadorAliens = 0;
+            }
 
-  if (this.contadorAliens >= this.delayAliens) 
-    this.contadorAliens = 0;
+
+        //Atualiza todos os objetos
+        this.objetos.forEach(objeto => {
+            if (!(objeto instanceof Alien)) {
+                objeto.update(this.teclas, this);
+            }
+        });
 
   // Remove tiros que saíram da tela
   this.objetos = this.objetos.filter(objeto => {

@@ -4,6 +4,8 @@ class Objeto {
     this.posY = y;
     this.largura = largura;
     this.altura = altura;
+    this.velAliens = 10;
+    this.direcaoAliens = 1;
   }
 
   update() {
