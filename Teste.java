@@ -14,28 +14,39 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.swing.Timer;
 
-import java.net.URL;  //esse é para o gif
+import java.net.URL;  //esse é para o gifimport java.util.Random;
 
 public class Teste extends JFrame implements ActionListener {
+    private JTextArea highScore;
+    private JTextArea scorePartida;
+    private JLabel gameOver;
+    private int scoreAnterior=0, scoreAtual=0;
+    private String score="";
+    private String novoScorePartida="";
     private JButton botao;
+    private JButton menu;
     private JLabel label;
+    private JLabel title;
     private BufferedImage imagem;
+    private BufferedImage titulo;
     private JLayeredPane janelas;
     private Jogador player1;
     private Rectangle areaUtil;
     private int larguraMax;
     private int comprimentoMax;
+    private java.util.List<Jogador> jogador = new ArrayList<>();
     private java.util.List<Alien1> listaAliens1 = new ArrayList<>();
     private java.util.List<Alien1> listaAliens1_2 = new ArrayList<>();
     private java.util.List<Alien2> listaAliens2 = new ArrayList<>();
     private java.util.List<Alien2> listaAliens2_2 = new ArrayList<>();
     private java.util.List<Alien3> listaAliens3 = new ArrayList<>();
-    private Timer moverAliens;
-    private Timer naveCooldown;
+    private Timer moverAliens, naveCooldown, delayTiroAlien;
     private int direcao = 1;
     private int identificadores=0;
     private int yJogador;
     private int derrota=0;
+    private Sons backgroundMusic;
+    private Sons gameOverSound;
 
     public Teste(){
         super("Space Invaders");
@@ -44,17 +55,17 @@ public class Teste extends JFrame implements ActionListener {
         areaUtil = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
         larguraMax = areaUtil.width;
         comprimentoMax =areaUtil.height;
-        System.out.println(larguraMax);
-        System.out.println(comprimentoMax);
-        //setSize(larguraMax,comprimentoMax);
+        System.out.println("Largura: "+larguraMax);
+        System.out.println("Comprimento: "+comprimentoMax);
         setMinimumSize(new Dimension(larguraMax,comprimentoMax));
+        setMaximumSize(new Dimension(larguraMax,comprimentoMax));
         setLayout(null);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setLocationRelativeTo(null); //Centraliza a janela
-        //janelas.setPreferredSize(new Dimension(1280, 760));
 
+       
 
-        //Criando o botao
+        //Criando o botao de jogar
         botao= new JButton("Jogar");
         botao.setFont(new Font("Arial", Font.BOLD, 80));
         botao.setForeground(new Color(45, 182, 250, 128));
@@ -65,6 +76,19 @@ public class Teste extends JFrame implements ActionListener {
         botao.setFocusPainted(false); 
         botao.setBounds((int)(larguraMax/2.5),(int)(comprimentoMax/2.5), 300, 120);
 
+        //Criando o botao de menu
+        menu= new JButton("Menu");
+        menu.setFont(new Font("Arial", Font.BOLD, 80));
+        menu.setForeground(new Color(45, 182, 250, 128));
+        menu.setOpaque(false);
+        menu.setContentAreaFilled(false);
+        menu.setBorderPainted(false);
+        menu.addActionListener(this);
+        menu.setFocusPainted(false); 
+        menu.setBounds((int)(larguraMax/2.5),(int)(comprimentoMax/2), 300, 120);
+        menu.setVisible(false);
+        menu.setEnabled(false);
+
         label= new JLabel();
         label.setBounds(0, 0, larguraMax, comprimentoMax);
 
@@ -72,30 +96,76 @@ public class Teste extends JFrame implements ActionListener {
         janelas = new JLayeredPane();
         janelas.setPreferredSize(new Dimension(larguraMax, comprimentoMax));
 
+        //Criando o gameOver
+        gameOver=new JLabel("GAME OVER");
+        gameOver.setFont(new Font("Arial",Font.BOLD,80));
+        gameOver.setBounds((int)(larguraMax/2.8),(int)(comprimentoMax/8),getWidth()/2,getHeight()/4);
+        gameOver.setForeground(new Color(255, 0, 0,255));
+        gameOver.setOpaque(false);
+        gameOver.setVisible(false);
+        janelas.add(gameOver,JLayeredPane.PALETTE_LAYER);
 
-        //Captando a iamgem de fundo
+         //Criando o highScore
+        score="HIGH SCORE:"+scoreAnterior;
+        highScore= new JTextArea(score);
+        highScore.setFont(new Font("Arial", Font.BOLD, 40));
+        highScore.setBounds((int)(larguraMax/2.6),(int)(comprimentoMax/1.5), 1000, 300);
+        highScore.setForeground(new Color(255, 255, 255, 255));
+        highScore.setOpaque(false);
+        highScore.setEditable(false);
+        highScore.setEnabled(false);
+        janelas.add(highScore,JLayeredPane.DEFAULT_LAYER);
+
+        //Criando o score atual
+        novoScorePartida="SCORE:"+scoreAtual;
+        scorePartida= new JTextArea(novoScorePartida);
+        scorePartida.setFont(new Font("Arial", Font.BOLD, 16));
+        scorePartida.setBounds((int)(larguraMax/1.1),0, 200, 200);
+        scorePartida.setForeground(new Color(255, 255, 255, 255));
+        scorePartida.setOpaque(false);
+        scorePartida.setVisible(false);
+        scorePartida.setEditable(false);
+        scorePartida.setEnabled(false);
+        janelas.add(scorePartida,JLayeredPane.DEFAULT_LAYER);
+
+        //Captando a imagem de fundo e do titulo
         try{
             imagem= ImageIO.read(new File("ProjetoFinal/Imagens/backgroundEstrelas.png"));
+            titulo= ImageIO.read(new File("ProjetoFinal/Imagens/Cosmic_Invasion.png"));
         }catch(IOException e){
-            System.out.println("Paia");
+            System.out.println("Arquivo de imagem nao econtrado");
         }
+
+        //Colocando o background
         Image imagemCarregada = imagem.getScaledInstance(getWidth(),getHeight(),Image.SCALE_SMOOTH);
         ImageIcon iconeDeImg = new ImageIcon(imagemCarregada);
         label.setIcon(iconeDeImg);
 
+        //Colocando o titulo
+        Image tituloRedi = titulo.getScaledInstance(getWidth()/2,getHeight()/2,Image.SCALE_SMOOTH);
+        ImageIcon tituloDeImg = new ImageIcon(tituloRedi);
+        title = new JLabel(tituloDeImg);
+        title.setBounds((larguraMax-getWidth()/2)/2,(comprimentoMax-getWidth()/2)/2,getWidth()/2,getHeight()/2);
+        janelas.add(title,JLayeredPane.PALETTE_LAYER);
 
 
-        //add(label);
-        //Adicionando o Botao
+        //Criando sons e dando play no audio;
+        backgroundMusic= new Sons("ProjetoFinal/SoundTracks/SoundTrack.wav");
+        gameOverSound= new Sons("ProjetoFinal/SoundTracks/trilhaOver.wav");
+        backgroundMusic.play();
+        backgroundMusic.loop();
+
+
+        //Adicionando o Botao e o menu
         label.add(botao);
-
-
+        label.add(menu);
         janelas.add(label, JLayeredPane.DEFAULT_LAYER);
-
-
         setContentPane(janelas);
 
+        //Encerrando ao fechar a janela
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        //Redimensionando a tela
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -104,42 +174,81 @@ public class Teste extends JFrame implements ActionListener {
         });
 
     }
-    
+    //Função para pegar a derrota e utilizar em outras funções
     public int getDerrota(){
         return derrota;
     }
    
-
+    //Ações ao dar play clicando no botão jogar
     @Override
     public  void actionPerformed(ActionEvent eve){
-        derrota=0;
-        botao.setVisible(false);
-        botao.setEnabled(false);
-        player1= new Jogador(larguraMax, comprimentoMax, janelas,listaAliens1, listaAliens1_2,listaAliens2, listaAliens2_2,listaAliens3, this);
-        yJogador= player1.getYNave();
-        JLabel joga1 = player1.getNave();
+        Object source = eve.getSource();
+        if(source==botao){
+            //Começa a musica
+            if(derrota==1){
+                gameOverSound.stop();
+                backgroundMusic.stop();
+                backgroundMusic.play();
+                backgroundMusic.loop();
+            }
+            //Redefine derrota como não está derrotado
+            derrota=0;
+            //Impede qu o botão de play seja visível e possa ser clicado
+            botao.setVisible(false);
+            botao.setEnabled(false);
+            //Deixa o titulo e o highscore invisivel 
+            title.setVisible(false);
+            highScore.setVisible(false);
+            //Permite a visão do score de partida
+            scorePartida.setVisible(true);
+            //Cria uma nova nave de jogador e adiciona a tela
+            player1= new Jogador(larguraMax, comprimentoMax, janelas,listaAliens1, listaAliens1_2,listaAliens2, listaAliens2_2,listaAliens3, this,jogador);
+            jogador.add(player1);
+            yJogador= player1.getYNave();
+            JLabel joga1 = player1.getNave();
+            janelas.add(joga1, JLayeredPane.PALETTE_LAYER);
+            
+            //Recria a fileira de aliens
+            recriaFileiras();
 
-        janelas.add(joga1, JLayeredPane.PALETTE_LAYER);
-        
-        recriaFileiras();
-
-        moverAliens = new Timer(2000, e -> moveAliens());
-        moverAliens.start();
-        naveCooldown= new Timer(60000,e ->spawnaNaveAlien());   
-        naveCooldown.start();
-        
-
-        //possibilitando a movimentação
-        this.addKeyListener(player1);
-        this.setFocusable(true); // vai permitir o foco na janela
-        this.requestFocusInWindow(); //foca na janela
+            //Começa a movimentação dos aliens da naveAlien roxa e dos Tiros dos Aliens
+            moverAliens = new Timer(2000, e -> moveAliens());
+            moverAliens.start();
+            //Spawna a  primeira nave no inicio
+            spawnaNaveAlien();
+            naveCooldown= new Timer(60000,e ->spawnaNaveAlien());   
+            naveCooldown.start();
+            delayTiroAlien= new Timer(2000,e ->alienAtira());   
+            delayTiroAlien.start();
+            
+            //Possibilitando a movimentação
+            this.addKeyListener(player1);
+            //Desabilita o gameOver e o menu
+            gameOver.setVisible(false);
+            menu.setVisible(false);
+            menu.setEnabled(false);
+        }
+        if(source == menu){
+            //Libera o titulo e volta para o inicio sem menu
+            gameOverSound.stop();
+            backgroundMusic.play();
+            title.setVisible(true);
+            gameOver.setVisible(false);
+            menu.setVisible(false);
+            menu.setEnabled(false);
+        }
+    
+        //Vai permitir o foco na janela
+        this.setFocusable(true);
+        this.requestFocusInWindow(); 
     }
 
-
+    //Função que permite a recriação das fileiras de Aliens
     public void recriaFileiras(){
         int numAliens;
         int x=200, y1=380, y2=310, y3=240, y4=170, y5=100;
         numAliens =larguraMax/150;
+        //Irá criar objetos e labels aliens e adiciona-los ao Pane
         for(int i=0;i<numAliens;i++){
             Alien1 alien1= new Alien1(x,y1);
             alien1.setId(identificadores);
@@ -161,19 +270,19 @@ public class Teste extends JFrame implements ActionListener {
             alien3.setId(identificadores);
             identificadores++;
 
-            JLabel novoAlien1= alien1.getAlien1();
+            JLabel novoAlien1= alien1.getAlien();
             novoAlien1.putClientProperty("id",alien1.getId());
 
-            JLabel novoAlien1_2= alien1_2.getAlien1();
+            JLabel novoAlien1_2= alien1_2.getAlien();
             novoAlien1_2.putClientProperty("id",alien1_2.getId());
 
-            JLabel novoAlien2= alien2.getAlien2();
+            JLabel novoAlien2= alien2.getAlien();
             novoAlien2.putClientProperty("id",alien2.getId());
 
-            JLabel novoAlien2_2= alien2_2.getAlien2();
+            JLabel novoAlien2_2= alien2_2.getAlien();
             novoAlien2_2.putClientProperty("id",alien2_2.getId());
 
-            JLabel novoAlien3= alien3.getAlien3();
+            JLabel novoAlien3= alien3.getAlien();
             novoAlien3.putClientProperty("id",alien3.getId());
 
             listaAliens1.add(alien1);
@@ -191,16 +300,17 @@ public class Teste extends JFrame implements ActionListener {
             x+=120;
         }
     }
-
+    //Spawna a nave roxa alien
     public void spawnaNaveAlien(){
         NaveAlien naveAlien = new NaveAlien(larguraMax,janelas);
         JLabel novaNave = naveAlien.getNaveAlien();
         novaNave.putClientProperty("id",-1);
         janelas.add(novaNave, JLayeredPane.PALETTE_LAYER);
     }
-
+    //Movimenta a fileira de aliens
     public void moveAliens(){
         int bateu=0;
+        //Verifica se os aliens da primeira fileira atingiram a parede ou a distancia maxima do jogador
         for(Alien1 a1 : listaAliens1){
             a1.movimenta(direcao);
             if (a1.getX() <= 0 || a1.getX() >= larguraMax - 200) {
@@ -210,6 +320,7 @@ public class Teste extends JFrame implements ActionListener {
                 derrota=1;
             }
         }
+        //Verifica se os aliens da segunda fileira atingiram a parede ou a distancia maxima do jogador
         for(Alien1 a1_2 : listaAliens1_2){
             a1_2.movimenta(direcao);
             if (a1_2.getX() <= 0 || a1_2.getX() >= larguraMax - 120) {
@@ -219,6 +330,7 @@ public class Teste extends JFrame implements ActionListener {
                 derrota=1;
             }
         }
+        //Verifica se os aliens da terceira fileira atingiram a parede ou a distancia maxima do jogador
         for(Alien2 a2 : listaAliens2){
             a2.movimenta(direcao);
             if (a2.getX() <-120  || a2.getX() >= larguraMax - 120) {
@@ -228,6 +340,7 @@ public class Teste extends JFrame implements ActionListener {
                 derrota=1;
             }
         }
+        //Verifica se os aliens da quarta fileira atingiram a parede ou a distancia maxima do jogador
         for(Alien2 a2_2 : listaAliens2_2){
             a2_2.movimenta(direcao);
             if (a2_2.getX() <-120  || a2_2.getX() >= larguraMax - 120) {
@@ -237,6 +350,7 @@ public class Teste extends JFrame implements ActionListener {
                 derrota=1;
             }
         }
+        //Verifica se os aliens da quinta fileira atingiram a parede ou a distancia maxima do jogador
         for(Alien3 a3 : listaAliens3){
             a3.movimenta(direcao);
             if (a3.getX() <= 0 || a3.getX() >= larguraMax - 200) {
@@ -249,9 +363,9 @@ public class Teste extends JFrame implements ActionListener {
         
 
 
-
+        //Caso algum alien tenha batido na parede faz com que todos vão para baixo
         if(bateu==1){
-            javax.swing.Timer delay = new javax.swing.Timer(300, e -> {
+                Timer delay = new Timer(300, e -> {
                 direcao *= -1;
                 for(Alien1 a1 : listaAliens1){
                     a1.descer();
@@ -272,24 +386,152 @@ public class Teste extends JFrame implements ActionListener {
             delay.setRepeats(false);
             delay.start(); 
         }
+        //Caso o jogador perca remove tudo menos os titulos e os scores
         if(derrota==1){
             for (Component comp : janelas.getComponents()){
-                if (comp != label) {
+                if (comp != label && comp !=title && comp!=highScore && comp!=scorePartida && comp!=gameOver) {
                     janelas.remove(comp);
                 }
             }
+            //Define o jogador como derrotado e o remove
+            player1.setDerrota(1);
+            jogador.remove(player1);
             janelas.repaint();
+            //Para o cooldown da nave roxa para o movimento dos aliens e os tiros dos aliens
             naveCooldown.stop();
             moverAliens.stop();
+            delayTiroAlien.stop();
+            //Limpa as listas de aliens
             listaAliens1.clear();
             listaAliens1_2.clear();
             listaAliens2.clear();
             listaAliens2_2.clear();
             listaAliens3.clear();
+            //Libera o botao para jogar novamente e torna-o visível
             botao.setVisible(true);
             botao.setEnabled(true);
+            //Libera o botão de menu e torna-o visível
+            menu.setVisible(true);
+            menu.setEnabled(true);
+            //Torna gameOver visível
+            gameOver.setVisible(true);
+            //Define o novo HighScore caso seja maior
+            mudaHighScore();
+            //Permite a visão do highScore e impede a visão do score de partida
+            highScore.setVisible(true);
+            scorePartida.setVisible(false);
+            //Parando musica de backGround e dando play na musica de gameOver
+            backgroundMusic.stop();
+            gameOverSound.play();
+            //Torna os identificadores ou ids dos aliens começando em 0 denovo
+            identificadores=0;
         }
     }
+    //Função para gerar o tiro dos aliens
+    public void alienAtira(){
+        JLabel tiroAlien;
+        Random escolheLista = new Random();
+        int lista = escolheLista.nextInt(5);
+        Random alienRandom = new Random();
+        int index;
+        int posicaoX=300,posicaoY=300;
+        Alien1 auxAlien1;
+        Alien2 auxAlien2;
+        Alien3 auxAlien3;
+        int vazia=0;
+        //Esse do while fará com que ele busque sempre que houver listas livres
+        do{
+            vazia=0;
+            //Randomiza qual fileira de aliens será escolhida
+            lista = escolheLista.nextInt(5);
+            //Irá verificar se a lista escolhida está vazia caso não esteja escolhe um alien aleatório da lista para atirar
+            if(lista==0){
+                if(!listaAliens1.isEmpty()){
+                    index = alienRandom.nextInt(listaAliens1.size());
+                    auxAlien1=listaAliens1.get(index);
+                    posicaoX=auxAlien1.getX();
+                    posicaoY=auxAlien1.getY();
+                }
+                else{
+                    vazia=1;
+                }
+            }
+            if(lista==1){
+                if(!listaAliens1_2.isEmpty()){
+                    index = alienRandom.nextInt(listaAliens1_2.size());
+                    auxAlien1=listaAliens1_2.get(index);
+                    posicaoX=auxAlien1.getX();
+                    posicaoY=auxAlien1.getY();
+                }
+                else{
+                    vazia=1;
+                }
+            }
+            if(lista==2){
+                if(!listaAliens2.isEmpty()){
+                    index = alienRandom.nextInt(listaAliens2.size());
+                    auxAlien2=listaAliens2.get(index);
+                    posicaoX=auxAlien2.getX();
+                    posicaoY=auxAlien2.getY(); 
+                }
+                else{
+                    vazia=1;
+                }
+            }
+            if(lista==3){
+                if(!listaAliens2_2.isEmpty()){
+                    index = alienRandom.nextInt(listaAliens2_2.size());
+                    auxAlien2=listaAliens2_2.get(index);
+                    posicaoX=auxAlien2.getX();
+                    posicaoY=auxAlien2.getY();
+                }
+                else{
+                    vazia=1;
+                }
+            }
+            if(lista==4){
+                if(!listaAliens3.isEmpty()){
+                    index = alienRandom.nextInt(listaAliens3.size());
+                    auxAlien3=listaAliens3.get(index);
+                    posicaoX=auxAlien3.getX();
+                    posicaoY=auxAlien3.getY();
+                }
+                else{
+                    vazia=1;
+                }
+            }
+            //Caso a lista escolhida não esteja vazia irá realizar a criação e adição do tirp
+            if(vazia==0){
+                TiroAlien novoTiro= new TiroAlien(posicaoX,posicaoY, janelas,this,jogador,comprimentoMax);
+                tiroAlien=novoTiro.getTiro();
+                janelas.add(tiroAlien, JLayeredPane.PALETTE_LAYER); 
+            }
+            //Caso todas as listas estejam vazias irá parar o loop
+            if(listaAliens1.isEmpty() && listaAliens1_2.isEmpty() && listaAliens2.isEmpty() && listaAliens2_2.isEmpty() && listaAliens3.isEmpty()){
+                break;
+            }
+        }while(vazia!=0);
+    }
+    //Função para definir que o jogo foi perdido por outras funções
+    public void setDerrota(){
+        derrota=1;
+    }
+
+    //Função que altera o score da partida ao atingir um alien
+    public void setScore(int num){
+        scoreAtual+=num;
+        scorePartida.setText("SCORE:"+scoreAtual);
+    }
+    //Função que irá mudar o highScore caso a pontuação da partida tenha sido maior que o último highScore
+    public void mudaHighScore(){
+        if(scoreAtual>=scoreAnterior){
+            scoreAnterior=scoreAtual;
+        }
+        scoreAtual=0;
+        setScore(scoreAtual);
+        highScore.setText("HIGH SCORE:" + scoreAnterior);
+    }
+    
 
 
     //Isso é para redimensionar as coisas na tela
@@ -309,373 +551,6 @@ public class Teste extends JFrame implements ActionListener {
         Teste visualiza = new Teste();
         visualiza.setVisible(true);
     }
-
 }
 
-class Jogador implements KeyListener{
-    private JLayeredPane camada;
-    private URL url;
-    private JLabel nave;
-    private int posicaoX;
-    private int posicaoY;
-    private Timer mover;
-    private int direita=0, esquerda=0;
-    private int xMax, yMax;
-    private JLabel tiro;
-    private long ultimoTiro=0;
-    private List<Alien1> lista1;
-    private List<Alien2> lista2;
-    private List<Alien3> lista3;
-    private List<Alien1> lista4;
-    private List<Alien2> lista5;
-    private Teste janela;
-        Jogador(int w, int h, JLayeredPane camadas, List<Alien1> listaAliens1,  List<Alien1> listaAliens1_2, List<Alien2> listaAliens2, List<Alien2> listaAliens2_2,List<Alien3> listaAliens3, Teste janelas){
-            lista1= listaAliens1;
-            lista2= listaAliens2;
-            lista3= listaAliens3;
-            lista4= listaAliens1_2;
-            lista5= listaAliens2_2;
-            camada=camadas;
-            janela=janelas;
-            xMax=w;
-            yMax=h;
-            url = Jogador.class.getResource("/ProjetoFinal/Imagens/gifNave.gif");
-            ImageIcon icon = new ImageIcon(url);
-            nave = new JLabel(icon);
-            nave.setName("nave");
-            posicaoX=(int)(xMax/2.5);
-            posicaoY=yMax-240;
-            nave.setBounds(posicaoX, posicaoY, 250, 250);
-            mover = new Timer(10, e-> mexer() );
-            mover.start();
-        }
-        public int getYNave(){
-            return posicaoY;
-        }
-        public JLabel getNave(){
-            return nave;
-        }
-
-        public void setPosicao(int w,int h){
-            posicaoX=w;
-            posicaoY=h;
-            nave.setBounds(w, h, 250, 250);
-        }
-
-        @Override 
-        public void keyPressed(KeyEvent aperta){
-            if(janela.getDerrota()!=1){
-                int tecla = aperta.getKeyCode();
-                switch(tecla){
-
-                    case KeyEvent.VK_D:
-                    direita=1;
-                    break;
-
-                    case KeyEvent.VK_A:
-                    esquerda=1;
-                    break;
-
-                    case KeyEvent.VK_SPACE:
-                    long atual = System.currentTimeMillis();
-                    //Vai dar um cooldown entre os tiros
-                    if (atual - ultimoTiro >= 300) {
-                        Tiro novoTiro= new Tiro(posicaoX,posicaoY, camada,lista1,lista4,lista2,lista5,lista3,janela);
-                        tiro=novoTiro.getTiro();
-                        camada.add(tiro, JLayeredPane.PALETTE_LAYER);
-                        ultimoTiro = atual;    
-                    }
-                    
-                    break;
-                }
-            }
-        }
-        @Override public void keyReleased(KeyEvent solta) {
-            int soltou= solta.getKeyCode();
-            switch(soltou){
-                case KeyEvent.VK_D:
-                direita=0;
-                break;
-                case KeyEvent.VK_A:
-                esquerda=0;
-                break;
-            }
-        }
-        @Override public void keyTyped(KeyEvent e) {}
-
-        public void mexer(){
-            //Vai mover a nave para os dois lados
-            if(posicaoX>=-80 && posicaoX<=xMax-170){
-                //Impede de sair da tele pela direita
-                if(direita==1){
-                    posicaoX+=8;
-                    if(posicaoX>xMax-170){
-                        posicaoX=xMax-170;
-                    }
-                }
-                //Impede de sair da tela pela esquerda
-                if(esquerda==1){
-                    posicaoX-=8;
-                    if(posicaoX<-80){
-                        posicaoX=-80;
-                    }
-                }
-
-                setPosicao(posicaoX, posicaoY);
-            }
-            
-        }
-
-}
-
-class Tiro{
-    private URL url;
-    private JLabel tiro;
-    private int posicaoX, posicaoY;
-    private Timer mover;
-    private JLayeredPane camada;
-    private List<Alien1> lista1;
-    private List<Alien1> lista1_2;
-    private List<Alien2> lista2;
-    private List<Alien2> lista2_2;
-    private List<Alien3> lista3;
-    private Teste janela;
-    private static int vidasNave=3;
-        Tiro(int x, int y, JLayeredPane camadas,List<Alien1> listaAliens1,List<Alien1> listaAliens1_2,List<Alien2> listaAliens2, List<Alien2> listaAliens2_2,List<Alien3> listaAliens3, Teste janelas){
-            lista1=listaAliens1;
-            lista1_2=listaAliens1_2;
-            lista2= listaAliens2;
-            lista2_2= listaAliens2_2;
-            lista3= listaAliens3;
-            janela=janelas;
-            posicaoX=x;
-            posicaoY=y;
-            camada=camadas;
-            url = Tiro.class.getResource("/ProjetoFinal/Imagens/tiroNave.gif");
-            ImageIcon icon = new ImageIcon(url);
-            tiro = new JLabel(icon);
-            tiro.setBounds(posicaoX, posicaoY-30, 250, 250);
-            mover = new Timer(10, e-> mexer() );
-            mover.start();
-        }
-        public void mexer(){
-            posicaoY-=6;
-            tiro.setBounds(posicaoX, posicaoY-30, 250, 250);
-            for (Component comp : camada.getComponents()){
-                if (comp != tiro && "alien".equals(comp.getName()) && (posicaoY-(comp.getY()+50)<=2)&& (posicaoX>=comp.getX()-50) && (posicaoX<=comp.getX()+50)){
-                    Integer id = (Integer)((JComponent) comp).getClientProperty("id");
-
-                    lista1.removeIf(a -> a.getId() == id);
-                    lista1_2.removeIf(a -> a.getId() == id);
-                    lista2.removeIf(a -> a.getId() == id);
-                    lista2_2.removeIf(a -> a.getId() == id);
-                    lista3.removeIf(a -> a.getId() == id);
-                    //esse é para remover a nave de cima
-                    if(id==-1){
-                        vidasNave--;
-                        if(vidasNave==0){
-                            camada.remove(comp); // remove o inimigo
-                            vidasNave=3;
-                        }
-                    }
-                    //esse remove os aliens
-                    if(id!=-1){
-                        camada.remove(comp); // remove o inimigo
-                    }
-                    camada.remove(tiro); // remove o tiro
-                    camada.repaint();    // força a atualização da tela
-                    mover.stop();
-
-                    if(lista1.isEmpty() && lista1_2.isEmpty() && lista2.isEmpty() && lista2_2.isEmpty() && lista3.isEmpty()){
-                        janela.recriaFileiras();
-                    }
-
-
-                    return;
-                }
-            }
-
-            if(posicaoY<=-100){
-                camada.remove(tiro);
-                camada.repaint();
-                mover.stop();
-                return;
-            }
-        }
-        public JLabel getTiro(){
-            return tiro;
-        }
-}
-
-class Alien1{
-    private URL url;
-    private JLabel novoAlien;
-    private int xAtual,yAtual;
-    private int id;
-    Alien1(int x, int y){
-        xAtual=x;
-        yAtual=y;
-        url = Alien1.class.getResource("/ProjetoFinal/Imagens/alien1.gif");
-        ImageIcon icon = new ImageIcon(url);
-        novoAlien = new JLabel(icon);
-        novoAlien.setName("alien");
-        novoAlien.setBounds(x, y, 250, 250);
-    }
-
-    public void setId(int identificador){
-        id=identificador;
-    }
-
-    public int getId(){
-        return id;
-    }
-
-    public void movimenta(int inverter){
-        xAtual += 50 * inverter;
-        novoAlien.setBounds(xAtual, yAtual, 250, 250);
-    }
-    public void descer(){
-        yAtual += 50;
-        novoAlien.setBounds(xAtual, yAtual, 250, 250);
-    }
-
-    public int getX(){
-        return xAtual;
-    }
-    public int getY(){
-        return yAtual;
-    }
-
-    public JLabel getAlien1(){
-        return novoAlien;
-    }
-}
-class Alien2{
-    private URL url;
-    private JLabel novoAlien;
-    private int xAtual,yAtual;
-    private int id;
-    Alien2(int x, int y){
-        xAtual=x;
-        yAtual=y;
-        url = Alien1.class.getResource("/ProjetoFinal/Imagens/alien2.gif");
-        ImageIcon icon = new ImageIcon(url);
-        novoAlien = new JLabel(icon);
-        novoAlien.setName("alien");
-        novoAlien.setBounds(x, y, 250, 250);
-    }
-    public void setId(int identificador){
-        id=identificador;
-    }
-
-    public int getId(){
-        return id;
-    }
-
-
-    public void movimenta(int inverter){
-        xAtual += 50 * inverter;
-        novoAlien.setBounds(xAtual, yAtual, 250, 250);
-    }
-    public void descer(){
-        yAtual += 50;
-        novoAlien.setBounds(xAtual, yAtual, 250, 250);
-    }
-
-    public int getX(){
-        return xAtual;
-    }
-    public int getY(){
-        return yAtual;
-    }
-    public JLabel getAlien2(){
-        return novoAlien;
-    }
-}
-
-class Alien3{
-    private URL url;
-    private JLabel novoAlien;
-    private int xAtual,yAtual;
-    private int id;
-    Alien3(int x, int y){
-        xAtual=x;
-        yAtual=y;
-        url = Alien1.class.getResource("/ProjetoFinal/Imagens/alien3.gif");
-        ImageIcon icon = new ImageIcon(url);
-        novoAlien = new JLabel(icon);
-        novoAlien.setName("alien");
-        novoAlien.setBounds(x, y, 250, 250);
-    }
-    public void setId(int identificador){
-        id=identificador;
-    }
-
-    public int getId(){
-        return id;
-    }
-
-
-    public void movimenta(int inverter){
-        xAtual += 50 * inverter;
-        novoAlien.setBounds(xAtual, yAtual, 250, 250);
-    }
-    public void descer(){
-        yAtual += 50;
-        novoAlien.setBounds(xAtual, yAtual, 250, 250);
-    }
-
-    public int getX(){
-        return xAtual;
-    }
-    public int getY(){
-        return yAtual;
-    }
-    public JLabel getAlien3(){
-        return novoAlien;
-    }
-}
-
-class NaveAlien{
-    private URL url;
-    private JLabel novaNave;
-    private int xAtual=0;
-    private int xAdicional=5;
-    private int xMax;
-    private Timer mover;
-    private JLayeredPane camada;
-    private int vidas=3;
-    NaveAlien(int xMaximo, JLayeredPane camadas){
-        camada=camadas;
-        xMax=xMaximo;
-        url = Alien1.class.getResource("/ProjetoFinal/Imagens/NaveAlien.gif");
-        ImageIcon icon = new ImageIcon(url);
-        novaNave = new JLabel(icon);
-        novaNave.setName("alien");
-        novaNave.setBounds(0,-40, 250, 250);
-        mover= new Timer(30, e-> movimenta());
-        mover.start();
-    }
-    public void movimenta(){
-        if(xAtual>xMax-200){
-            xAdicional*=-1;
-        }
-        xAtual+=xAdicional;
-        if(xAtual<-200){
-            camada.remove(novaNave);
-            camada.repaint();
-            mover.stop();
-            return;
-        }
-        novaNave.setBounds(xAtual, -40, 250, 250);
-    }
-    public void setVidas(int num){
-        vidas=num;
-    }
-    public int getVidas(){
-        return vidas;
-    }
-    public JLabel getNaveAlien(){
-        return novaNave;
-    }
-}
+    
