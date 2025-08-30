@@ -5,16 +5,17 @@ import java.io.File;
 import javax.swing.JOptionPane;
 
 public class Sons {
+    private Clip clip;
     private String wav;
     Sons(String caminho){
         wav = caminho;
     }
-    public  void playMusic() {
+    public  void play() {
         try {
             File file = new File(wav);
             if (file.exists()) {
                 AudioInputStream audioIn = AudioSystem.getAudioInputStream(file);
-                Clip clip = AudioSystem.getClip();
+                clip = AudioSystem.getClip();
                 clip.open(audioIn);
                 clip.start();
             } else {
@@ -23,5 +24,12 @@ public class Sons {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public void stop(){
+        clip.stop();
+        clip.close();
+    }
+    public void loop(){
+        clip.loop(Clip.LOOP_CONTINUOUSLY);
     }
 }

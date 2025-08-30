@@ -13,7 +13,7 @@ import java.io.IOException;
 import javax.swing.Timer;
 
 import java.net.URL;
-
+//Classe para a criação do jogador
 class Jogador implements KeyListener{
     private JLayeredPane camada;
     private URL url;
@@ -39,6 +39,7 @@ class Jogador implements KeyListener{
     private Teste janela;
 
     private int derrota=0;
+    //Irá criar o jogador definir suas vidas e começar a permitir a movimentação dele
         Jogador(int w, int h, JLayeredPane camadas, List<Alien1> listaAliens1,  List<Alien1> listaAliens1_2, List<Alien2> listaAliens2, List<Alien2> listaAliens2_2,List<Alien3> listaAliens3, Teste janelas, List<Jogador> player){
             jogador=player;
             lista1= listaAliens1;
@@ -67,13 +68,13 @@ class Jogador implements KeyListener{
         public JLabel getNave(){
             return nave;
         }
-
+        //Deinie a posição que le irá começar
         public void setPosicao(int w,int h){
             posicaoX=w;
             posicaoY=h;
             nave.setBounds(w, h, 250, 250);
         }
-
+        //Permite que ao clicar D vá para a direita e ao pertar A vá para esquerda além de ao apertar ESPAÇO realize a criação de um tiro
         @Override 
         public void keyPressed(KeyEvent aperta){
             if(derrota!=1){
@@ -102,6 +103,7 @@ class Jogador implements KeyListener{
                 }
             }
         }
+        //Irá para a movimentação da nave ao soltar as teclas D ou A
         @Override public void keyReleased(KeyEvent solta) {
             int soltou= solta.getKeyCode();
             switch(soltou){
