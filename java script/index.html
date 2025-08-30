@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>Space Invaders JS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.html">
   <style>
         body { 
             margin: 0; 
@@ -25,7 +29,7 @@
 
         #botaoJogar {
             position: absolute;
-            top: 70%;
+            top: 50%;
             left: 40%;
             font-size: 2vw;
             padding: 14px 32px 15px;
@@ -40,10 +44,11 @@
             gap: 10px;
             height: 4vw;
             width: 17vw;
+            z-index: 4;
         }
         #titulo {
             position: absolute;
-            z-index: 4;
+            z-index: 3;
             display: block;
             margin-left: auto;
             margin-right: auto;
@@ -51,19 +56,69 @@
             text-align: center;
             background-color:  transparent;
             border: 5px solid transparent;
-            height: 45%;
+            height: 65%;
             width: 70%;
-            left: 22%;
-            top: 5%;
+            left: 20%;
+            top: 1%;
             border-radius: 10px;
         
         }
-        .alien1{
+        
+        #nave{
             position: absolute;
-            width:5vw;
+            z-index: 2;
+            width:10vw;
             left:50%;
-            top:90%;
+            top:80%;
             visibility: hidden;
+        }
+        #tiroNave{
+            position: absolute;
+            z-index: 2;
+            width: 10vw;
+            left:50%;
+            top:80%;
+            visibility: hidden;
+        }
+        #alien{
+            position: absolute;
+            width: 5vw;
+            left: 50%;
+            top: 90%;
+            z-index: 2;
+            visibility: hidden;
+        }
+        .high-count{
+            z-index: 1;
+            position:absolute;
+            font-family: "Press Start 2P", sans-serif;
+            font-size: 30px;
+            left: 30%;
+            top: 65%;
+            opacity: 1;
+            font-weight: bolder;
+            width: 40%;
+            height: 25%;
+            background-size: 100%;
+            color: white;
+            
+            
+        }
+        .score-count{
+            z-index: 1;
+            position:absolute;
+            font-family: "Press Start 2P", sans-serif;
+            font-size: 20px;
+            left: 85%;
+            top: 5%;
+            opacity: 1;
+            font-weight: bolder;
+            width: 40%;
+            height: 25%;
+            background-size: 100%;
+            color: white;
+            visibility: hidden;
+            
         }
   </style>
 </head>
@@ -73,12 +128,40 @@
     <canvas id="Canvas"></canvas>
 
     <img src="Imagens/Cosmic Invasion.png" id="titulo" alt="">
-    <img src="Imagens/alien1.gif" id="alien1" alt="" onplay="">
-    <img src="Imagens/alien2.gif" id="alien2" alt="">
-    <img src="Imagens/alien3.gif" id="alien3" alt="">
-    <img src="Imagens/gifNave.gif" id="nave" alt="">
-    <img src="Imagens/tiroNave.gif" id="tiro" alt="">
-    <img src="Imagens/explosaoGif.gif" id="explosao" alt="" onplay="">
-    <script src="teste.js"></script>
+    <img src="Imagens/gifNave.gif" id="nave" alt="" autoonplay="">
+    <img src="Imagens/tiroNave.gif" id="tiroNave" alt="" onplay="">
+    <img src="Imagens/alien1.gif" id="alien" alt="" onplay="">
+    
+    <script src="objeto.js"></script>
+    <script src="tiroAlien.js"></script>
+    <script src="alien.js"></script>
+    <script src="jogador.js"></script>
+    <script src="tiro.js"></script>
+    <script src="jogo.js"></script>
+
+    <script>
+    // === Entrada do jogo (equivalente ao main) ===
+    const jogo = new Jogo("Canvas");
+
+    document.getElementById("botaoJogar").onclick = () => {
+      document.getElementById("botaoJogar").style.display = "none";
+      document.getElementById("titulo").style.display = "none";
+      document.querySelector(".high-count").style.display = "none";
+      document.querySelector(".score-count").style.visibility = "visible";
+      
+      jogo.iniciar();
+    };
+    </script>
+
+        <div class="high-count">
+                 <div class="high">
+                     <p>HIGHSCORE: <span id="highValor">0</span></p>
+                 </div>
+            </div>
+        <div class="score-count">
+                 <div class="score">
+                     <p>SCORE: <span id="scoreValor">0</span></p>
+                 </div>
+            </div>
 </body>
 </html> 
