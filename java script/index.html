@@ -58,12 +58,27 @@
             border-radius: 10px;
         
         }
-        .alien1{
+        .explosao{
             position: absolute;
             width:5vw;
             left:50%;
             top:90%;
             visibility: hidden;
+        }
+        .nave{
+            width:5vw;
+            left:50%;
+            top:90%;
+        }
+        .tiroNave{
+            width: 5vw;
+            left:50%;
+            top:90%;
+        }
+        .alien{
+            width: 5vw;
+            left: 50%;
+            top: 90%;
         }
   </style>
 </head>
@@ -73,12 +88,22 @@
     <canvas id="Canvas"></canvas>
 
     <img src="Imagens/Cosmic Invasion.png" id="titulo" alt="">
-    <img src="Imagens/alien1.gif" id="alien1" alt="" onplay="">
-    <img src="Imagens/alien2.gif" id="alien2" alt="">
-    <img src="Imagens/alien3.gif" id="alien3" alt="">
-    <img src="Imagens/gifNave.gif" id="nave" alt="">
-    <img src="Imagens/tiroNave.gif" id="tiro" alt="">
     <img src="Imagens/explosaoGif.gif" id="explosao" alt="" onplay="">
-    <script src="teste.js"></script>
+    <img src="Imagens/gifNave.gif" id="nave" alt="" onplay="">
+    <img src="Imagens/tiroNave.gif" id="tiroNave" alt="" onplay="">
+    <img src="Imagens/alien1.gif" id="alien" alt="" onplay="">
+    
+    <script src="jogo.js"></script>
+
+    <script>
+    // === Entrada do jogo (equivalente ao main) ===
+    const jogo = new Jogo("Canvas");
+
+    document.getElementById("botaoJogar").onclick = () => {
+      document.getElementById("botaoJogar").style.display = "none";
+      document.getElementById("titulo").style.display = "none";
+      jogo.iniciar();
+    };
+    </script>
 </body>
 </html> 
