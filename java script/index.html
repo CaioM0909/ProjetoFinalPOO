@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>Space Invaders JS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.html">
   <style>
         body { 
             margin: 0; 
@@ -25,7 +29,7 @@
 
         #botaoJogar {
             position: absolute;
-            top: 70%;
+            top: 50%;
             left: 40%;
             font-size: 2vw;
             padding: 14px 32px 15px;
@@ -44,7 +48,7 @@
         }
         #titulo {
             position: absolute;
-            z-index: 4;
+            z-index: 3;
             display: block;
             margin-left: auto;
             margin-right: auto;
@@ -52,10 +56,10 @@
             text-align: center;
             background-color:  transparent;
             border: 5px solid transparent;
-            height: 45%;
+            height: 65%;
             width: 70%;
-            left: 22%;
-            top: 5%;
+            left: 20%;
+            top: 1%;
             border-radius: 10px;
         
         }
@@ -84,6 +88,22 @@
             z-index: 2;
             visibility: hidden;
         }
+        .score-count{
+            z-index: 1;
+            position:absolute;
+            font-family: "Press Start 2P", sans-serif;
+            font-size: 30px;
+            left: 30%;
+            top: 65%;
+            opacity: 1;
+            font-weight: bolder;
+            width: 40%;
+            height: 25%;
+            background-size: 100%;
+            color: white;
+            
+            
+        }
   </style>
 </head>
 <body>
@@ -109,8 +129,14 @@
     document.getElementById("botaoJogar").onclick = () => {
       document.getElementById("botaoJogar").style.display = "none";
       document.getElementById("titulo").style.display = "none";
+      document.querySelector(".score-count").style.display = "none";
       jogo.iniciar();
     };
     </script>
+
+        <div class="score-count">
+                 <div class="score">
+                     <p>HIGHSCORE:</p>
+                 </div>
 </body>
 </html> 
