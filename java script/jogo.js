@@ -37,7 +37,7 @@ class Jogo {
   iniciar() {
     const jogador = new Jogador(this.largura / 2, this.altura - 120, this);
     this.objetos.push(jogador);
-    
+    this.criarAliens();
     nave.style.visibility = "visible";
 
     
@@ -55,7 +55,7 @@ class Jogo {
   criarAliens() {
     
     let x = 100;
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 12; i++) {
       this.objetos.push(new Alien(x, 50, 500, 500));
       x += 80;
     }
@@ -64,8 +64,36 @@ class Jogo {
   loop() {
   this.ctx.clearRect(0, 0, this.largura, this.altura);
 
-  // Atualiza
-  this.objetos.forEach(objeto => objeto.update(this.teclas));
+  this.alienMudouDirecao = false;
+  this.contadorAliens++;
+  // Atualiza todos os objetos
+    this.objetos.forEach(objeto => {
+      if (objeto instanceof Alien) {
+        if(objeto.posX + objeto.largura >= jogo.largura+250 || objeto.posX <= -250) {
+          // muda direção global
+          jogo.direcaoAliens *= -1;
+          // desce todos os aliens
+          jogo.objetos.forEach(obj => {
+            if(obj instanceof Alien) {
+              obj.posY += 50; // distância para descer
+            }
+          }
+          );
+         }
+          if (this.contadorAliens >= this.delayAliens) {
+            objeto.update(this.teclas, this);
+          }
+      }
+
+      else {
+          //Jogador, tiros etc...
+          objeto.update(this.teclas, this);
+          
+        }
+    });
+
+  if (this.contadorAliens >= this.delayAliens) 
+    this.contadorAliens = 0;
 
   // Remove tiros que saíram da tela
   this.objetos = this.objetos.filter(objeto => {
@@ -74,8 +102,53 @@ class Jogo {
       return false; // tira do array
     }
     return true;
+
+    
+  });
+
+  this.objetos.forEach(objeto1 => {
+  if (objeto1 instanceof Tiro) {
+    this.objetos.forEach(objeto2 => {
+      if (objeto2 instanceof Alien) {
+        if (this.colidiu(objeto1, objeto2)) {
+          // remove o alien
+          if (objeto2.alien) 
+            objeto2.alien.remove();
+          // remove o tiro
+          objeto1.remover();
+
+          // marca para remoção no próximo filtro
+          objeto1.morto = true;
+          objeto2.morto = true;
+        }
+      }
+    });
+  }
+});
+
+  // Remove objetos que estão mortos ou fora da tela
+  this.objetos = this.objetos.filter(objeto => {
+    if (objeto.morto) return false;
+
+    if (objeto instanceof Tiro && objeto.posY + objeto.altura < 0) {
+      objeto.remover();
+      return false;
+    }
+    return true;
   });
 
   requestAnimationFrame(this.loop);
   }
+
+  colidiu(a, b) {
+  let boxA = a.getHitbox ? a.getHitbox() : a;
+  let boxB = b.getHitbox ? b.getHitbox() : b;
+
+  return (
+    boxA.x < boxB.x + boxB.largura &&
+    boxA.x + boxA.largura > boxB.x &&
+    boxA.y < boxB.y + boxB.altura &&
+    boxA.y + boxA.altura > boxB.y
+  );
+}
 }

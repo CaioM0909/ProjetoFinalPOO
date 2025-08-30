@@ -24,7 +24,7 @@ class Jogador extends Objeto {
     }    
     if (teclas["Space"] && this.cooldown <= 0) {
       this.jogo.adicionarTiro(new Tiro(this.posX + this.largura / 2 - 20, this.posY - 10));
-      this.cooldown = 100;
+      this.cooldown = 70;
     }
 
     if (this.cooldown > 0) {
