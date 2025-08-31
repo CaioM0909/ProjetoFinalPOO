@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Space Invaders JS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&visibility=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.html">
+  <style>
+        body { 
+            margin: 0; 
+            background: black; 
+            overflow: hidden; 
+        }
+
+        canvas {
+            z-index: 1; 
+            background-image: url("/Imagens/backgroundEstrelas.png");
+            background-size: 100%;
+            background-repeat: no-repeat;  
+            background-position-y: 0%;
+            background-position-x:center;
+            overflow-y: hidden;
+            overflow-x: hidden;
+
+
+        }
+
+        #botaoJogar {
+            position: absolute;
+            top: 50%;
+            left: 40%;
+            font-size: 2vw;
+            padding: 14px 32px 15px;
+            background: rgba(45,182,250,0.5);
+            background-size: 100%;
+            border: none;
+            color: white;
+            cursor: pointer;
+            visibility: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            height: 4vw;
+            width: 17vw;
+            z-index: 4;
+        }
+        #titulo {
+            position: absolute;
+            z-index: 3;
+            visibility: block;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 3px;
+            text-align: center;
+            background-color:  transparent;
+            border: 5px solid transparent;
+            height: 65%;
+            width: 70%;
+            left: 20%;
+            top: 1%;
+            border-radius: 10px;
+        }
+        #botaoMenu {
+            position: absolute;
+            top: 65%;
+            left: 40%;
+            font-size: 2vw;
+            padding: 14px 32px 15px;
+            background: rgba(45,182,250,0.5);
+            background-size: 100%;
+            border: none;
+            color: white;
+            cursor: pointer;
+            visibility: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            height: 4vw;
+            width: 17vw;
+            visibility: hidden;
+            z-index: 4;
+        }
+        
+        #nave{
+            position: absolute;
+            z-index: 2;
+            width:15vw;
+            left:81%;
+            top:1%;
+            visibility: visible;
+        }
+        #tiroNave{
+            position: absolute;
+            z-index: 2;
+            width: 10vw;
+            left:50%;
+            top:80%;
+            visibility: hidden;
+        }
+        .high-count{
+            z-index: 1;
+            position:absolute;
+            font-family: "Press Start 2P", sans-serif;
+            font-size: 30px;
+            left: 35%;
+            top: 85%;
+            opacity: 1;
+            font-weight: bolder;
+            width: 40%;
+            height: 25%;
+            background-size: 100%;
+            color: white;
+            user-select: none;
+            
+        }
+        .score-count{
+            z-index: 1;
+            position:absolute;
+            font-family: "Press Start 2P", sans-serif;
+            font-size: 20px;
+            left: 83%;
+            top: 1%;
+            opacity: 1;
+            font-weight: bolder;
+            width: 40%;
+            height: 25%;
+            background-size: 100%;
+            color: white;
+            visibility: hidden;
+            user-select: none;
+            
+        }
+        .gameOver{
+            z-index: 1;
+            position:absolute;
+            font-family: "Press Start 2P", sans-serif;
+            font-size: 50px;
+            height: 65%;
+            width: 70%;
+            left: 34%;
+            top: 20%;
+            opacity: 1;
+            font-weight: bolder;
+            background-size: 100%;
+            color: red;
+            visibility: hidden;
+            user-select: none;
+
+        }
+        #naveAlien{
+            position: absolute;
+            z-index: 2;
+            width: 60vw;
+            height: 60vw;
+            left: -15%;
+            top: -40%;
+            visibility: visible;
+        }
+        #coracao1{
+            position: absolute;
+            z-index: 1;
+            width:7vw;
+            left:77%;
+            top:-1%;
+            visibility: hidden;
+        }
+        #coracao2{
+            position: absolute;
+            z-index: 1;
+            width:7vw;
+            left:75%;
+            top:-1%;
+            visibility: hidden;
+        }
+        #coracao3{
+            position: absolute;
+            z-index: 1;
+            width:7vw;
+            left:73%;
+            top:-1%;
+            visibility: hidden;
+        }
+        .tutorial{
+            z-index: 1;
+            position:absolute;
+            font-family: "Press Start 2P", sans-serif;
+            font-size: 30px;
+            height: 65%;
+            width: 70%;
+            left: 0%;
+            top: 90%;
+            opacity: 1;
+            font-weight: bolder;
+            background-size: 100%;
+            color: rgba(45,182,250,0.5);
+            visibility: visible;
+            user-select: none;
+        }
+        #botaoSom {
+            position: absolute;
+            top: 0%;
+            left: 0%;
+            padding: 14px 32px 15px;
+            background:none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            height: 4vw;
+            width: 4vw;
+            z-index: 4;
+            outline: none;
+        }
+  </style>
+</head>
+<body>
+    <button id="botaoJogar">Jogar</button>
+    <button id="botaoMenu">Menu</button>
+    <button id="botaoSom" tabindex="-1">
+        <img src="/Imagens/mute.png" id="imagemBotao" alt="" onerror="this.style.display='none'">
+    </button>
+
+    <canvas id="Canvas"></canvas>
+
+    <img src="/Imagens/Cosmic Invasion.png" id="titulo" alt="" onerror="this.style.display='none'" >
+    <img src="/Imagens/gifNave.gif" id="nave" alt="" autoonplay="" onerror="this.style.display='none'">
+    <img src="/Imagens/tiroNave.gif" id="tiroNave" alt="" onplay="" onerror="this.style.display='none'">
+    <img src="/Imagens/NaveAlien.gif" id="naveAlien" alt="" onplay=""  onerror="this.style.display='none'">
+    <img src="/Imagens/coracao.gif" id="coracao1" alt="" onplay="" onerror="this.style.display='none'">
+    <img src="/Imagens/coracao.gif" id="coracao2" alt="" onplay="" onerror="this.style.display='none'">
+    <img src="/Imagens/coracao.gif" id="coracao3" alt="" onplay="" onerror="this.style.display='none'">
+    
+    
+    
+    <script src="objeto.js"></script>
+    <script src="tiroAlien.js"></script>
+    <script src="naveAlien.js"></script>
+    <script src="alien.js"></script>
+    <script src="jogador.js"></script>
+    <script src="tiro.js"></script>
+    <script src="jogo.js"></script>
+
+    <script>
+    // === Entrada do jogo (equivalente ao main) ===
+    const jogo = new Jogo("Canvas");
+    
+
+    document.getElementById("botaoJogar").onclick = () => {
+        document.getElementById("botaoJogar").style.visibility = "hidden";
+        document.getElementById("botaoMenu").style.visibility = "hidden";
+        document.getElementById("titulo").style.visibility = "hidden";
+        document.querySelector(".high-count").style.visibility = "hidden";
+        document.querySelector(".score-count").style.visibility = "visible";
+        document.querySelector(".gameOver").style.visibility = "hidden";
+        document.getElementById("naveAlien").style.visibility = "hidden";
+        document.getElementById("coracao1").style.visibility = "visible";
+        document.getElementById("coracao2").style.visibility = "visible";
+        document.getElementById("coracao3").style.visibility = "visible";
+        document.getElementById("nave").style.visibility = "hidden";
+        document.querySelector(".tutorial").style.visibility ="hidden";
+        
+        jogo.som();
+        jogo.iniciar();
+        
+    };
+    document.getElementById("botaoMenu").onclick = () => {
+        document.getElementById("botaoMenu").style.visibility = "hidden";
+        document.getElementById("titulo").style.visibility = "visible";
+        document.querySelector(".gameOver").style.visibility = "hidden";
+        document.getElementById("naveAlien").style.visibility = "visible";
+        document.getElementById("nave").style.visibility = "visible";
+        document.querySelector(".tutorial").style.visibility ="visible";
+        jogo.som();
+    };
+
+    document.getElementById("botaoSom").onclick = () => { 
+        jogo.setSom();
+    };
+    </script>
+
+        <div class="high-count">
+                 <div class="high">
+                     <p>HIGHSCORE: <span id="highValor">0</span></p>
+                 </div>
+            </div>
+        <div class="score-count">
+                 <div class="score">
+                     <p>SCORE:<span id="scoreValor">0</span></p>
+                 </div>
+            </div>
+            <div class="gameOver">
+                    <div class="over">
+                        <p>GAME OVER</p>
+                    </div>
+                </div>
+        <div class="tutorial">
+                    <div class="tutoras">
+                        <p>A  D  SPACEBAR</p>
+                    </div>
+                </div>
+
+</body>
+</html> 
