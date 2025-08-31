@@ -35,10 +35,10 @@ class TiroAlien extends Objeto {
 
   getHitbox() {
     return {
-      x: this.posX + 20,   // deixa a hitbox mais estreita
-      y: this.posY + 40,
+      x: this.posX + 200,   // deixa a hitbox mais estreita
+      y: this.posY -150,
       largura: 4,
-      altura: this.altura - 200
+      altura: this.altura  -180
     };
   }
 }

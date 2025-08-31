@@ -1,7 +1,7 @@
 class Tiro extends Objeto {
   constructor(x, y) {
     super(x, y, 90, 180);
-    this.vel = 5;
+    this.vel = 6;
 
     this.element = document.createElement("img");
     this.element.src = "Imagens/tiroNave.gif";
@@ -30,4 +30,6 @@ class Tiro extends Objeto {
       altura: this.altura - 200
     };
   }
+  
+  
 }

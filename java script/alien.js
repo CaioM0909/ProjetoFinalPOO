@@ -22,7 +22,16 @@ class Alien extends Objeto {
       altura: this.altura - 100   // encurta altura
     };
   }
+  
+  remover() {
+    if (this.alien) {
+      this.alien.remove();
+      this.alien = null;
+    }
+  }
 }
+
+
 
 class Alien1 extends Alien{
     constructor(x, y, largura, altura) {
