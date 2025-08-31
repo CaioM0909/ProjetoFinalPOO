@@ -12,16 +12,4 @@ class Objeto {
     // cada subclasse implementa sua própria lógica
   }
 
-  /*draw(ctx) {
-    // cada subclasse implementa sua própria renderização
-  }*/
-
-  colideCom(outro) {
-    return (
-      this.posX < outro.posX + outro.largura &&
-      this.posX + this.largura > outro.posX &&
-      this.posY < outro.posY + outro.altura &&
-      this.posY + this.altura > outro.posY
-    );
-  }
 }

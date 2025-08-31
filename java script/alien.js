@@ -17,12 +17,21 @@ class Alien extends Objeto {
   getHitbox() {
     return {
       x: this.posX + 180,      // dá uma folga nas laterais
-      y: this.posY - 180,      // sobe a hitbox, elimina espaço vazio em cima
+      y: this.posY - 160,      // sobe a hitbox, elimina espaço vazio em cima
       largura: this.largura - 420, // encurta largura
       altura: this.altura - 100   // encurta altura
     };
   }
+  
+  remover() {
+    if (this.alien) {
+      this.alien.remove();
+      this.alien = null;
+    }
+  }
 }
+
+
 
 class Alien1 extends Alien{
     constructor(x, y, largura, altura) {

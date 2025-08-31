@@ -5,7 +5,7 @@
   <title>Space Invaders JS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&visibility=swap" rel="stylesheet">
     <link rel="stylesheet" href="index.html">
   <style>
         body { 
@@ -38,7 +38,7 @@
             border: none;
             color: white;
             cursor: pointer;
-            display: flex;
+            visibility: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
@@ -49,7 +49,7 @@
         #titulo {
             position: absolute;
             z-index: 3;
-            display: block;
+            visibility: block;
             margin-left: auto;
             margin-right: auto;
             padding: 3px;
@@ -61,7 +61,26 @@
             left: 20%;
             top: 1%;
             border-radius: 10px;
-        
+        }
+        #botaoMenu {
+            position: absolute;
+            top: 65%;
+            left: 40%;
+            font-size: 2vw;
+            padding: 14px 32px 15px;
+            background: rgba(45,182,250,0.5);
+            background-size: 100%;
+            border: none;
+            color: white;
+            cursor: pointer;
+            visibility: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            height: 4vw;
+            width: 17vw;
+            visibility: hidden;
+            z-index: 4;
         }
         
         #nave{
@@ -80,21 +99,13 @@
             top:80%;
             visibility: hidden;
         }
-        #alien{
-            position: absolute;
-            width: 5vw;
-            left: 50%;
-            top: 90%;
-            z-index: 2;
-            visibility: hidden;
-        }
-        .score-count{
+        .high-count{
             z-index: 1;
             position:absolute;
             font-family: "Press Start 2P", sans-serif;
             font-size: 30px;
-            left: 30%;
-            top: 65%;
+            left: 35%;
+            top: 85%;
             opacity: 1;
             font-weight: bolder;
             width: 40%;
@@ -104,19 +115,63 @@
             
             
         }
+        .score-count{
+            z-index: 1;
+            position:absolute;
+            font-family: "Press Start 2P", sans-serif;
+            font-size: 20px;
+            left: 83%;
+            top: 1%;
+            opacity: 1;
+            font-weight: bolder;
+            width: 40%;
+            height: 25%;
+            background-size: 100%;
+            color: white;
+            visibility: hidden;
+            
+        }
+        .gameOver{
+            z-index: 1;
+            position:absolute;
+            font-family: "Press Start 2P", sans-serif;
+            font-size: 50px;
+            height: 65%;
+            width: 70%;
+            left: 34%;
+            top: 20%;
+            opacity: 1;
+            font-weight: bolder;
+            background-size: 100%;
+            color: red;
+            visibility: hidden;
+        }
+        #naveAlien{
+            position: absolute;
+            z-index: 2;
+            width: 60vw;
+            height: 60vw;
+            left: -20%;
+            top: -40%;
+            visibility: visible;
+        }
   </style>
 </head>
 <body>
     <button id="botaoJogar">Jogar</button>
-  
+    <button id="botaoMenu">Menu</button>
+
     <canvas id="Canvas"></canvas>
 
     <img src="Imagens/Cosmic Invasion.png" id="titulo" alt="">
     <img src="Imagens/gifNave.gif" id="nave" alt="" autoonplay="">
     <img src="Imagens/tiroNave.gif" id="tiroNave" alt="" onplay="">
-    <img src="Imagens/alien1.gif" id="alien" alt="" onplay="">
+    <img src="Imagens/NaveAlien.gif" id="naveAlien" alt="" onplay="">
+    
     
     <script src="objeto.js"></script>
+    <script src="tiroAlien.js"></script>
+    <script src="naveAlien.js"></script>
     <script src="alien.js"></script>
     <script src="jogador.js"></script>
     <script src="tiro.js"></script>
@@ -125,18 +180,41 @@
     <script>
     // === Entrada do jogo (equivalente ao main) ===
     const jogo = new Jogo("Canvas");
+    
 
     document.getElementById("botaoJogar").onclick = () => {
-      document.getElementById("botaoJogar").style.display = "none";
-      document.getElementById("titulo").style.display = "none";
-      document.querySelector(".score-count").style.display = "none";
-      jogo.iniciar();
+        document.getElementById("botaoJogar").style.visibility = "hidden";
+        document.getElementById("botaoMenu").style.visibility = "hidden";
+        document.getElementById("titulo").style.visibility = "hidden";
+        document.querySelector(".high-count").style.visibility = "hidden";
+        document.querySelector(".score-count").style.visibility = "visible";
+        document.querySelector(".gameOver").style.visibility = "hidden";
+        document.getElementById("naveAlien").style.visibility = "hidden";
+        jogo.iniciar();
+        
+    };
+    document.getElementById("botaoMenu").onclick = () => {
+        document.getElementById("botaoMenu").style.visibility = "hidden";
+        document.getElementById("titulo").style.visibility = "visible";
+        document.querySelector(".gameOver").style.visibility = "hidden";
+        document.getElementById("naveAlien").style.visibility = "visible";
     };
     </script>
 
+        <div class="high-count">
+                 <div class="high">
+                     <p>HIGHSCORE: <span id="highValor">0</span></p>
+                 </div>
+            </div>
         <div class="score-count">
                  <div class="score">
-                     <p>HIGHSCORE:</p>
+                     <p>SCORE: <span id="scoreValor">0</span></p>
                  </div>
+            </div>
+            <div class="gameOver">
+                    <div class="over">
+                        <p>GAME OVER</p>
+                    </div>
+                </div>
 </body>
 </html> 
