@@ -23,11 +23,11 @@ classe tiro: A classe tiro ,seguindo o mesmo principio da classe jogador, cria u
 
 classe alien: A classe alien possui algumas diferenciações das classes anteriores por possuir as subclasses alien1, alien2 e alien3 que são utilizadas para diferenciar as imagens dos aliens. Da mesma maneira existem as funções para movimentação(update()), remoção(remover()) e hitbox(getHitbox()).
 
-<img style="width:250;" alt="" src="./Imagens/alien1.gif"/>
+<img style="width:150;" alt="" src="./Imagens/alien1.gif"/>
 
-<img style="width:250;" alt="" src="./Imagens/alien2.gif"/>
+<img style="width:150;" alt="" src="./Imagens/alien2.gif"/>
 
-<img style="width:250;" alt="" src="./Imagens/alien3.gif"/>
+<img style="width:150;" alt="" src="./Imagens/alien3.gif"/>
 
 classe naveAlien: A classe naveAlien está relacionada a um objeto especial dentro das mecânicas do jogo, este é um objeto que aparece pela primeira vez 10 segundos após o inicio do jogo e 60 segundos após desaparecer ele continua sendo criado, sendo um objeto especial ele possui 3 vidas para ser removido e possui uma pontuação de 1000 pontos para cada naveAlien morta. As funções que ele possui são, assim como nas outras classes, movimentação(update()), remoção(remover()), hitbox(getHitbox()) e como diferencial a função PerdeVida() que reduz a vida da naveAlien.
 
