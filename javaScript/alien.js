@@ -38,20 +38,21 @@ class Alien extends Objeto {
 
 class Alien1 extends Alien{
     constructor(x, y, largura, altura) {
-        super(x, y, largura, altura,"/Imagens/alien1.gif");
+        super(x, y, largura, altura,"../Imagens/alien1.gif");
         this.tipo = "alien1";
     }
 }
 class Alien2 extends Alien{
     constructor(x, y, largura, altura) {
-        super(x, y, largura, altura,"/Imagens/alien2.gif");
+        super(x, y, largura, altura,"../Imagens/alien2.gif");
         this.tipo = "alien2";
     }
 }
 class Alien3 extends Alien{
     constructor(x, y, largura, altura) {
-        super(x, y, largura, altura,"/Imagens/alien3.gif");
+        super(x, y, largura, altura,"../Imagens/alien3.gif");
         this.tipo = "alien3";
     }
 }
   
+
