@@ -9,7 +9,7 @@ class NaveAlien extends Objeto {
 
     // cria a imagem da naveAlien
     this.element = document.createElement("img");
-    this.element.src = "/Imagens/NaveAlien.gif"; 
+    this.element.src = "../Imagens/NaveAlien.gif"; 
     this.element.style.position = "absolute";
     this.element.style.left = this.posX + "px";
     this.element.style.top = this.posY + "px";
@@ -72,4 +72,5 @@ class NaveAlien extends Objeto {
       jogo.score(1000);
     }
   }
+
 }
