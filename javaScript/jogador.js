@@ -7,7 +7,7 @@ class Jogador extends Objeto {
     this.cooldown = 0;
     this.nave = document.createElement("img");
     this.nave.classList.add("jogador");
-    this.nave.src = "/Imagens/gifNave.gif";
+    this.nave.src = "../Imagens/gifNave.gif";
     this.nave.style.position = "absolute";
     this.nave.style.left = this.posX + "px";
     this.nave.style.top = this.posY + "px";
@@ -72,3 +72,4 @@ class Jogador extends Objeto {
   }
 
 }
+
