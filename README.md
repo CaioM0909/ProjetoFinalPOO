@@ -16,7 +16,7 @@ Execução dos arquivos: Em java: Após baixar a pasta, abrir a pasta jogoJava e
 Em javaScript após baixar, ir na pasta javaScript e executar o index.html.
 ![jsRun](./Imagens/jsRun.png)
 
-
+# Discussão das features
 Discussão do que desenvolvemos: Primeiro desenvolvemos o jogo na linguagem Java para ter uma base melhor de como desenvolver-lo dentro da linguagem secundária(JavaScript), por meio disso tomamos como exemplo o jogo disponibilizado para referência dentro da explicação do projeto e seguimos a maioria das características deste exemplo com algumas alterações autorais para tornar o jogo único.
 Algumas das coisas que implemetamos foram: 
 
@@ -38,7 +38,7 @@ Colisões: Possuem "HitBox" em objetos que podem ser atingidos como os Aliens a 
 
 Sistema de Pontuação: Cada Alien possui uma pontuação específica que aumenta o Score ao atingi-lo, além de possuir uma váriavel que define o maior score já obtido.
 
-
+# Discussão do OO
 
 Discussão da OO na segunda linguagem adotada: Dentro do JavaScript criamos uma classe chamada Objeto para servir como superclasse para todas as classes de objeto. 
 
