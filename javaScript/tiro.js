@@ -6,7 +6,7 @@ class Tiro extends Objeto {
 
     //cria a imagem do tiro 
     this.element = document.createElement("img");
-    this.element.src = "/Imagens/tiroNave.gif";
+    this.element.src = "../Imagens/tiroNave.gif";
     this.element.style.position = "absolute";
     this.element.style.width = this.largura + "px";
     this.element.style.height = this.altura + "px";
@@ -40,3 +40,4 @@ class Tiro extends Objeto {
   
   
 }
+
