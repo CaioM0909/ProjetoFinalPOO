@@ -6,15 +6,15 @@ class TiroAlien extends Objeto {
     this.element = document.createElement("img");
     const randomiza = Math.floor(Math.random() * 20);
     if(randomiza<=9){
-        this.element.src = "../Imagens/tiroRapido.gif";
+        this.element.src = "../Imagens/TiroRapido.gif";
         this.vel = 3;
     }
     if(randomiza>9 && randomiza<17){
-        this.element.src = "../Imagens/tiroMedio.gif";
+        this.element.src = "../Imagens/TiroMedio.gif";
         this.vel = 2;
     }
     if(randomiza>=17){
-        this.element.src = "../Imagens/tiroDevagar.gif";
+        this.element.src = "../Imagens/TiroDevagar.gif";
         this.vel = 1.5;
     }
     this.element.style.position = "absolute";
@@ -49,3 +49,4 @@ class TiroAlien extends Objeto {
   }
 
 }
+
