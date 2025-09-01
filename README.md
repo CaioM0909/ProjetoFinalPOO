@@ -4,12 +4,41 @@
 Membros:Gustavo César Barreto Santana,
         Caio Mendonça Barreto de Brito
 
-Repositório: 
+Repositório: https://github.com/CaioM0909/ProjetoFinalPOO
 
 Tema: O tema do trabalho é um jogo baseado em Space Invaders utilizando o paradigma orientado ao objeto nas linguagens Java e JavaScript
 
+Obs: O jogo foi testado para linux e windows e pode possuir alguns problemas com o aúdio por conta do arquivo WAV e com o consumo de GPU dado o grande número de gifs rodando simultaneamente.
+
+Execução dos arquivos: Em java: Após baixar a pasta, abrir a pasta jogoJava e no VSCode ir em Jogo.java descer até a main e dar run.
+![javaRun](./Imagens/javaRun.png)
+
+Em javaScript após baixar, ir na pasta javaScript e executar o index.html.
+![jsRun](./Imagens/jsRun.png)
+
 
 Discussão do que desenvolvemos: Primeiro desenvolvemos o jogo na linguagem Java para ter uma base melhor de como desenvolver-lo dentro da linguagem secundária(JavaScript), por meio disso tomamos como exemplo o jogo disponibilizado para referência dentro da explicação do projeto e seguimos a maioria das características deste exemplo com algumas alterações autorais para tornar o jogo único.
+Algumas das coisas que implemetamos foram: 
+
+A movimentação dos aliens: Eles são objetos feitos com gifs que após chegarem as bordas da tela tem a direção de seu movimento invertido e um aumento em seu Y para descer na tela.
+
+A movimentação do jogador: Que capta caso as teclas A ou D estejam pressionadas fazendo o X do jogador variar mas sem sair das bordas da tela.
+
+Vidas: Em que são gifs de corações que indicam quantos tiros o jogador pode levar e ao acabar o jogo é definido com perdido.
+
+Tiros do jogador: Em que é capttado caso a tecla SPACEBAR(Espaço) esteja pressionada criando um objeto Tiro que possui colisão e caso atinja um alien apaga os 2 objetos tanto o tiro quanto o alien atingido.
+
+Tiros dos Aliens: São 3 tiros que pertencem ao mesmo objeto e é randomizado qual deles será utilizado, sendo eles com velocidades diferentes eles possuem hitbox que removem vidas do jogador.
+
+NaveAlien: Uma nave que se move diferente dos aliens, ela se move continuamente e vai para a direita e ao bater na borda volta para a esquerda e sai da tela voltando após um minuto.
+
+Sons: Possui botão que ativa o som e permite ativar e desativar a música de background além de possuir um som de gameOver ao perder.
+
+Colisões: Possuem "HitBox" em objetos que podem ser atingidos como os Aliens a NaveAlien o Jogador e os Tiros.
+
+Sistema de Pontuação: Cada Alien possui uma pontuação específica que aumenta o Score ao atingi-lo, além de possuir uma váriavel que define o maior score já obtido.
+
+
 
 Discussão da OO na segunda linguagem adotada: Dentro do JavaScript criamos uma classe chamada Objeto para servir como superclasse para todas as classes de objeto. 
 
