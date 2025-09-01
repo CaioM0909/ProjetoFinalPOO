@@ -27,9 +27,9 @@ class Jogo {
     this.descendo = false;
     this.derrota = 0
     this.somAtivo=0;
-    this.somBackground = new Audio("/SoundTracks/SoundTrack.wav");
+    this.somBackground = new Audio("../SoundTracks/SoundTrack.wav");
     this.somBackground.loop= true;
-    this.somDerrota = new Audio("/SoundTracks/trilhaOver.wav");
+    this.somDerrota = new Audio("../SoundTracks/trilhaOver.wav");
 
     window.addEventListener("resize", () => this.redimensionaCanvas());
     window.addEventListener("keydown", e => this.teclas[e.code] = true);
@@ -131,13 +131,13 @@ class Jogo {
         for(let j=0;j<5;j++){
             for(let i = 0; i < 12; i++) {
                 if(j<2){
-                    this.objetos.push(new Alien1(x, y, 500, 500,"/Imagens/alien1.gif"));
+                    this.objetos.push(new Alien1(x, y, 500, 500,"../Imagens/alien1.gif"));
                 }
                 if(j>=2 && j<=3){
-                    this.objetos.push(new Alien2(x, y, 500, 500,"/Imagens/alien2.gif"));
+                    this.objetos.push(new Alien2(x, y, 500, 500,"../Imagens/alien2.gif"));
                 }
                 if(j==4){
-                    this.objetos.push(new Alien3(x, y, 500, 500,"/Imagens/alien3.gif"));
+                    this.objetos.push(new Alien3(x, y, 500, 500,"../Imagens/alien3.gif"));
                 }
                 x += 80;
             }
@@ -389,16 +389,17 @@ moveAliens(){
     this.imagemBotao =document.getElementById('imagemBotao');
       if(this.somAtivo==0){
           this.somAtivo=1;
-          imagemBotao.src="/Imagens/sound.png";
+          imagemBotao.src="../Imagens/sound.png";
           if(this.derrota!=1){
               this.somBackground.play();
           }
       }
       else if(this.somAtivo==1){
-          imagemBotao.src="/Imagens/mute.png";
+          imagemBotao.src="../Imagens/mute.png";
           this.somAtivo=0;
           this.somBackground.pause();
       }
   }
   
 }
+
