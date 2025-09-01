@@ -21,6 +21,7 @@ classe alien: A classe alien possui algumas diferenciações das classes anterio
 classe naveAlien: A classe naveAlien está relacionada a um objeto especial dentro das mecânicas do jogo, este é um objeto que aparece pela primeira vez 10 segundos após o inicio do jogo e 60 segundos após desaparecer ele continua sendo criado, sendo um objeto especial ele possui 3 vidas para ser removido e possui uma pontuação de 1000 pontos para cada naveAlien morta. As funções que ele possui são, assim como nas outras classes, movimentação(update()), remoção(remover()), hitbox(getHitbox()) e como diferencial a função PerdeVida() que reduz a vida da naveAlien.
 
 classe tiroAlien : A classe tiroAlien funciona como um objeto gerado a partir dos aliens para causar dano ao jogador, por meio de uma função ele sorteia uma das três opções de tiros com chances diferentes de serem escolhidos de acordo com suas respectivas velocidades(ex: o tiro mais rapido tem mais chances de ser escolhido), o resto das funções segue o mesmo princípio das anteriores como a função de movimentação(updade()), remoção(remover()) e hitbox(getHitbox()).
+
 ![tiroAlien1](./Imagens/tiroRapido)      
 
 ![tiroAlien2](./Imagens/tiroMedio)           
