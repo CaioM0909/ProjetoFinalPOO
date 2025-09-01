@@ -116,7 +116,7 @@ public class Jogo extends JFrame implements ActionListener {
         janelas.setPreferredSize(new Dimension(larguraMax, comprimentoMax));
 
         //Criando o label de Alien para aparecer na tela inicial
-        urlNaveTitulo = Jogador.class.getResource("/Imagens/naveAlien.gif");
+        urlNaveTitulo = Jogador.class.getResource("/Imagens/NaveAlien.gif");
         if(urlNaveTitulo!=null){
             ImageIcon gifNaveAlien = new ImageIcon(urlNaveTitulo);
             alienTitulo = new JLabel(gifNaveAlien);
@@ -639,5 +639,6 @@ public class Jogo extends JFrame implements ActionListener {
         visualiza.setVisible(true);
     }
 }
+
 
     
